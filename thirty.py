@@ -152,6 +152,23 @@ out = ''.join(w)
 
 dsp.write(out, 'wesley_thirty_10')
 
+## 11
+out = ''
+curves = [ dsp.breakpoint([ dsp.rand() for p in range(3) ], 30) for c in range(30) ]
+
+for curve in curves:
+    clen = dsp.mstf(30)
+    s = dsp.randchoose(snds)
+    t = [ dsp.cut(s, dsp.flen(s) * c - clen, clen) for c in curve ]
+    t = [ dsp.env(tt, 'sine') for tt in t ]
+    t = [ dsp.pan(t[i], curve[i]) for i, c in enumerate(curve) ]
+    curve.reverse()
+    t = [ dsp.transpose(t[i], (curve[i] * 0.5) + 0.75) for i, c in enumerate(curve) ]
+    t = ''.join(t)
+    out += t
+
+dsp.write(out, 'wesley_thirty_11')
+
 ## 30 
 out = ''
 w = wesley * 30
