@@ -182,11 +182,67 @@ for rep in range(30):
     for curve in curves:
         ww = [ dsp.transpose(w[i], curve[i]) for i in range(100) ]
         ww = ''.join(ww)
+        ww = dsp.pan(ww, dsp.rand())
         layers += [ ww ]
 
     out += dsp.mix(layers)
 
 dsp.write(out, 'wesley_thirty_12')
+
+## 13
+out = ''
+
+layers = []
+
+for l in range(30):
+    w = dsp.vsplit(wesley, 30, 300)
+
+    for i, ww in enumerate(w):
+        choice = dsp.randint(0, 3)
+
+        if choice == 0:
+            www = ''
+            reps = dsp.randint(10, 100)
+            pans = dsp.breakpoint([ dsp.rand() for p in range(reps / 3) ], reps)
+            for m in range(reps):
+                www += dsp.pan(ww, pans[m])
+
+            w[i] = www
+
+        elif choice == 1:
+            w[i] = dsp.transpose(ww, dsp.rand(0.1, 0.75))
+            w[i] = dsp.pan(w[i], dsp.rand())
+
+        elif choice == 2:
+            w[i] = dsp.fill(ww, dsp.mstf(200))
+            w[i] = dsp.pine(w[i], dsp.mstf(dsp.randint(300, 1000)), dsp.rand(50, 2000))
+
+        elif choice == 3:
+            pass
+
+    layers += [ dsp.amp(''.join(w), 0.5) ]
+
+out = dsp.mix(layers)
+
+dsp.write(out, 'wesley_thirty_13')
+
+## 14
+out = ''
+
+for i in range(30):
+    t = dsp.split(thirty, dsp.mstf(30))
+    for i, tt in enumerate(t):
+        if dsp.randint(0, 1) == 0 and i > 0:
+            t.insert(i - 1, tt)
+
+    if dsp.randint(0, 1) == 0:
+        t.reverse()
+
+    t = [ dsp.alias(tt) for tt in t ]
+
+    out += ''.join(t)
+
+dsp.write(out, 'wesley_thirty_14')
 
 ## 30 
 out = ''
