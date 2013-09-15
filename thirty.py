@@ -6,8 +6,6 @@ thirty = dsp.read('thirty.wav').data
 wesley = dsp.read('wesley.wav').data
 snds = [thirty, wesley]
 
-#amp_env_wes = dsp.curve(4, num_grains * 30)
-
 ## 01
 out = ''
 t = thirty * 30
@@ -168,6 +166,27 @@ for curve in curves:
     out += t
 
 dsp.write(out, 'wesley_thirty_11')
+
+## 12
+out = ''
+
+wlen = dsp.flen(wesley) / 100
+w = dsp.split(wesley, wlen)
+
+min_speeds = dsp.curve(4, 30)
+min_speeds = [ (m * 0.75) + 0.25 for m in min_speeds ]
+
+for rep in range(30):
+    curves = [ dsp.breakpoint([ dsp.rand(min_speeds[rep], 1.5) for p in range(10) ], 100) for c in range(30) ]
+    layers = []
+    for curve in curves:
+        ww = [ dsp.transpose(w[i], curve[i]) for i in range(100) ]
+        ww = ''.join(ww)
+        layers += [ ww ]
+
+    out += dsp.mix(layers)
+
+dsp.write(out, 'wesley_thirty_12')
 
 ## 30 
 out = ''
