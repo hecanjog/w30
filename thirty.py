@@ -244,6 +244,66 @@ for i in range(30):
 
 dsp.write(out, 'wesley_thirty_14')
 
+## 15
+out = ''
+
+freqs = tune.fromdegrees([1, 3, 5, 9], 3, 'c')
+
+lens = [ 1, 1.25, 1.5, 2, 3, 5, 10, 20 ]
+for plen in lens:
+    layers = []
+    for freq in freqs:
+        l = dsp.pine(dsp.amp(thirty, 0.5), int(dsp.flen(thirty) * plen), freq)
+        l = dsp.pan(l, dsp.rand())
+        layers += [ l ]
+
+    out += dsp.mix(layers)
+
+dsp.write(out, 'wesley_thirty_15')
+
+## 16
+out = ''
+
+def make_pulses(degrees, bpm):
+    freqs = tune.fromdegrees(degrees, 3, 'c')
+
+    layers = []
+    for freq in freqs:
+        l = dsp.pine(dsp.amp(thirty, 0.5), int(dsp.flen(thirty) * 20), freq)
+        l = dsp.pan(l, dsp.rand())
+        layers += [ l ]
+
+    t = dsp.mix(layers)
+
+    t = dsp.split(t, dsp.mstf(dsp.bpm2ms(bpm)))
+
+    t = dsp.randshuffle(t)
+
+    return ''.join(t)
+
+out += make_pulses([1, 3, 5, 9], 200)
+out += make_pulses([1, 3, 6, 8], 200)
+out += make_pulses([1, 3, 5, 6 + 12], 400)
+out += dsp.cut(make_pulses([1, 3, 5, 6 + 12], 1200), 0, dsp.stf(2.5))
+
+dsp.write(out, 'wesley_thirty_16')
+
+## 17
+out = ''
+
+freqs = tune.fromdegrees([1, 3, 5, 9], 8, 'c')
+
+layers = []
+for freq in freqs:
+    l = dsp.pine(dsp.amp(thirty, 0.5), dsp.stf(5), freq)
+    l = dsp.pan(l, dsp.rand())
+    layers += [ l ]
+
+out = dsp.mix(layers)
+
+dsp.write(out, 'wesley_thirty_17')
+
+
 ## 30 
 out = ''
 w = wesley * 30
