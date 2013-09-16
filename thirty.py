@@ -44,7 +44,7 @@ dsp.write(out, 'wesley_thirty_03')
 ## 04
 out = ''
 
-for count in range(30):
+for count in range(5):
     t = dsp.randchoose(snds)
     t = dsp.vsplit(t, 1, dsp.mstf(20))
     for i, g in enumerate(t):
@@ -183,7 +183,7 @@ for rep in range(30):
         ww = [ dsp.transpose(w[i], curve[i]) for i in range(100) ]
         ww = ''.join(ww)
         ww = dsp.pan(ww, dsp.rand())
-        layers += [ ww ]
+        layers += [ dsp.amp(ww, 0.7) ]
 
     out += dsp.mix(layers)
 
@@ -362,14 +362,134 @@ for r in range(2):
 
 dsp.write(out, 'wesley_thirty_21')
 
-## 30 
+## 22
 out = ''
-w = wesley * 30
-w = dsp.pan(w, 0)
 
-ww = dsp.cut(wesley, 0, dsp.flen(wesley) - dsp.mstf(30)) * 30
-ww = dsp.pan(ww, 1)
+w = dsp.vsplit(wesley, dsp.mstf(10), dsp.mstf(30))
+t = dsp.vsplit(thirty, dsp.mstf(10), dsp.mstf(30))
 
-out = dsp.mix([ w, ww ])
+out = dsp.interleave(w, t)
+out = [ dsp.env(g, 'sine') for g in out ]
+out = ''.join(out)
+
+dsp.write(out, 'wesley_thirty_22')
+
+## 23
+out = ''
+
+w = dsp.vsplit(wesley, dsp.mstf(10), dsp.mstf(30))
+t = dsp.vsplit(thirty, dsp.mstf(10), dsp.mstf(30))
+
+out = dsp.interleave(w, t)
+out = [ dsp.env(g, 'sine') for g in out ]
+out = [ dsp.transpose(g, dsp.rand(0.25, 1)) for g in out ]
+out = ''.join(out)
+
+dsp.write(out, 'wesley_thirty_23')
+
+## 24
+out = ''
+
+w = dsp.vsplit(wesley, dsp.mstf(10), dsp.mstf(30))
+t = dsp.vsplit(thirty, dsp.mstf(10), dsp.mstf(30))
+
+out = dsp.interleave(w, t)
+out = [ dsp.env(g, 'sine') for g in out ]
+out = [ dsp.transpose(g, dsp.rand(0.75, 2)) * dsp.randint(1, 10) for g in out ]
+out = ''.join(out)
+
+dsp.write(out, 'wesley_thirty_24')
+
+## 25
+out = ''
+w = dsp.vsplit(wesley, dsp.mstf(10), dsp.mstf(20))
+t = dsp.vsplit(thirty, dsp.mstf(10), dsp.mstf(20))
+
+t = [ dsp.env(g, 'line') for g in t ]
+
+w = [ dsp.pad(dsp.env(w[i % len(w)] * dsp.randint(5, 10), 'phasor'), 0, dsp.mstf(10)) for i in range(30) ]
+
+t = [ t[i % len(t)] for i in range(len(w)) ]
+
+out = dsp.interleave(t, w)
+
+out = [ dsp.transpose(out[i], 1.2) for i in range(len(out)) ]
+
+out = ''.join(out)
+
+dsp.write(out, 'wesley_thirty_25')
+
+
+## 26
+out = ''
+w = dsp.vsplit(wesley, dsp.mstf(10), dsp.mstf(20))
+t = dsp.vsplit(thirty, dsp.mstf(1), dsp.mstf(10))
+
+w = [ dsp.pad(dsp.env(g * 3, 'phasor'), 0, dsp.mstf(30)) for g in w ]
+
+t = [ t[i % len(t)] for i in range(len(w)) ]
+
+out = dsp.interleave(t, w)
+
+curve = dsp.curve(5, len(out))
+curve = [ c + 0.25 for c in curve ]
+
+out = [ dsp.transpose(out[i], curve[i]) for i in range(len(out)) ]
+
+out = ''.join(out)
+
+dsp.write(out, 'wesley_thirty_26')
+
+## 27
+out = ''
+
+w = dsp.mix([ dsp.transpose(dsp.pan(wesley, dsp.rand()), dsp.rand(0.1, 0.2)) for i in range(10) ])
+t = dsp.mix([ dsp.transpose(dsp.pan(thirty, dsp.rand()), dsp.rand(0.1, 0.2)) for i in range(10) ])
+
+out = dsp.mix([ w, t ])
+
+dsp.write(out, 'wesley_thirty_27')
+
+## 28
+out = ''
+
+w = dsp.mix([ dsp.transpose(dsp.pan(wesley, dsp.rand()), dsp.rand(0.1, 0.2)) for i in range(10) ])
+t = dsp.mix([ dsp.transpose(dsp.pan(thirty, dsp.rand()), dsp.rand(0.1, 0.2)) for i in range(10) ])
+
+w = dsp.pine(w, dsp.stf(12), 300)
+t = dsp.pine(t, dsp.stf(12), 900)
+
+out = dsp.mix([ w, t ])
+
+dsp.write(out, 'wesley_thirty_28')
+
+## 29
+out = ''
+
+w = dsp.mix([ dsp.transpose(dsp.pan(wesley, dsp.rand()), dsp.rand(0.1, 0.2)) for i in range(10) ])
+t = dsp.mix([ dsp.transpose(dsp.pan(thirty, dsp.rand()), dsp.rand(0.1, 0.2)) for i in range(10) ])
+
+freqs = tune.fromdegrees([1, 3, 5, 9], 5, 'c')
+
+w = dsp.mix([ dsp.pine(dsp.amp(w, 0.3), dsp.stf(20), freq) for freq in freqs ])
+t = dsp.mix([ dsp.pine(dsp.amp(t, 0.3), dsp.stf(20), freq) for freq in freqs ])
+
+out = dsp.mix([ w, t ])
+
+dsp.write(out, 'wesley_thirty_29')
+
+
+## 30
+out = ''
+
+freqs = tune.fromdegrees([1, 3, 5, 9], 2, 'c')
+layers = []
+for i in range(30):
+    l = dsp.pine(dsp.amp(wesley, 0.1), dsp.stf(30), dsp.randchoose(freqs))
+    l = dsp.pan(l, dsp.rand())
+    layers += [ l ]
+
+out = dsp.mix(layers)
 
 dsp.write(out, 'wesley_thirty_30')
+
