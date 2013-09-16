@@ -303,6 +303,64 @@ out = dsp.mix(layers)
 
 dsp.write(out, 'wesley_thirty_17')
 
+## 18
+out = ''
+upper = [ dsp.randint(60, 200) for i in range(10) ]
+upper += [ dsp.randint(20, 60) for i in range(30) ]
+upper += [ dsp.randint(5, 20) for i in range(10) ]
+upper += [3, 1, 0]
+
+for up in upper:
+    w = dsp.vsplit(wesley, 30, 300)
+    for i, ww in enumerate(w):
+        if dsp.randint(0, up) != 0:
+            w[i] = dsp.pad('', 0, dsp.flen(ww))
+
+    out += ''.join(w)
+
+dsp.write(out, 'wesley_thirty_18')
+
+## 19
+out = ''
+upper = [2, 4]
+upper += [ dsp.randint(5, 20) for i in range(10) ]
+upper += [ dsp.randint(20, 60) for i in range(30) ]
+upper += [ dsp.randint(60, 200) for i in range(10) ]
+
+for up in upper:
+    w = dsp.vsplit(thirty, 30, 300)
+    for i, ww in enumerate(w):
+        if dsp.randint(0, up) != 0:
+            w[i] = dsp.pad('', 0, dsp.flen(ww))
+
+    out += ''.join(w)
+
+dsp.write(out, 'wesley_thirty_19')
+
+## 20
+out = ''
+
+w = dsp.split(wesley, 30)
+speeds = dsp.curve(4, len(w))
+for i, ww in enumerate(w):
+    w[i] = dsp.transpose(ww, speeds[i] + 0.01)
+
+out = ''.join(w)
+
+dsp.write(out, 'wesley_thirty_20')
+
+## 21
+out = ''
+
+for r in range(2):
+    w = dsp.split(wesley, 30)
+    speeds = dsp.breakpoint([ dsp.rand(0.01, 1.1) for i in range(len(w) / 10) ], len(w))
+    for i, ww in enumerate(w):
+        w[i] = dsp.transpose(ww, speeds[i])
+
+    out += ''.join(w)
+
+dsp.write(out, 'wesley_thirty_21')
 
 ## 30 
 out = ''
